@@ -3,6 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Student extends CI_Controller {
 
+	public function __construct()//to look
+	{
+		parent::__construct();
+		$this->load->helper(array('form', 'url'));
+		$this->load->library(array('form_validation'));
+		$this->load->model('crud_model');
+	}
+
 	/**
 	 * Index Page for this controller.
 	 *
@@ -558,12 +566,58 @@ class Student extends CI_Controller {
 		echo json_encode($data);
 		//return $this->response->setJSON($data);
 	  }
+	  //************************* */
 
 	  public function ajcr(){
 
 		
 		$this->load->view("ajcr");
 	  }
+	  public function ajcrInsert(){
+		if($this->input->is_ajax_request()){
+			$this->form_validation->set_rules('name', 'Name', 'required');
+			$this->form_validation->set_rules('phonenumber', 'Phonenumber', 'required');
+			$this->form_validation->set_rules('gender', 'Gender', 'required');
+			if ($this->form_validation->run() == FALSE)
+                {
+					$data = array('response' => "error", 'message' => validation_errors());
+                }
+                else
+                {
+					 $name= $this->input->post('name');
+					 $phonenumber= $this->input->post('phonenumber');
+					 $gender= $this->input->post('gender');
+			
+			
+					 $ajax_data=[
+					 	"student_name" => $name,
+						"phone_number" => $phonenumber,
+					 	"gender" => $gender];
+					 
+					//  	$hai=$this->db->insert("student",$newdata);
+					//$hai=true;
+					//$ajax_data = $this->input->post();
+					//$hai=$this->db->insert("student",$newdata);
+					if($this->crud_model->insert_entry($ajax_data)){
+
+						$data = array('response' => "success", 'message' => 'data added successfully');
+					}else{
+						$data = array('response' => "error", 'message' => 'failed');
+					}
+                }
+		}else{
+			echo "No direct script access allowed";
+		}
+		
+		echo json_encode($data);
+	  }
+	  public function fetch(){
+		if($this->input->is_ajax_request()){
+
+		}
+	  }
+
+
 // ********************************
 	  public function formValidation(){
 
@@ -593,6 +647,8 @@ class Student extends CI_Controller {
 
 			);
 		}
+	  }public function samp(){
+		$this->load->view("samp");
 	  }
 
 	  
