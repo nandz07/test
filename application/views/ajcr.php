@@ -70,7 +70,7 @@
                         <th>phonenumber</th>
                         <th>gender</th>
                     </thead>
-                    <tbody>
+                    <tbody id="tbody">
 
                     </tbody>
                 </table>
@@ -106,6 +106,7 @@
                 data: DataJSON,
                 success: function(response) {
                     console.log(response);
+                    fetch();
                     $('#exampleModal').modal('hide')
                     $('#form')[0].reset();
                     if (response.message == "success") {
@@ -161,13 +162,28 @@
         function fetch(){
             $.ajax({
                 url:"fetch",
-                method:"POST",
+                method:"get",
                 dataType:"json",
                 success:function(data){
-                    console.log(data);
+                    var tbody="";
+
+                    for(var key in data){
+                        tbody += "<tr>";
+                        tbody += "<td>"+ data[key]['student_name'] +"</td>";
+                        tbody += "<td>"+ data[key]['phone_number'] +"</td>";
+                        tbody += "<td>"+ data[key]['gender'] +"</td>";
+                        tbody += `<td>
+                                    <a href="#" id="del" value="${data[key]['id']}">Delete</a>
+                                    <a href="#" id="edit" value="${data[key]['id']}">Edit</a>
+                                </td>`;
+                        tbody += "</tr>";
+                    }
+                    $("#tbody").html(tbody);
                 }
             });
         }
+        fetch();
+
     </script>
 </body>
 

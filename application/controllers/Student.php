@@ -612,7 +612,14 @@ class Student extends CI_Controller {
 		echo json_encode($data);
 	  }
 	  public function fetch(){
+		
 		if($this->input->is_ajax_request()){
+			$this->db->select("*");
+			$this->db->from("student");
+			$res=$this->db->get("");
+			$data=$res->result();
+			
+			echo json_encode($data);
 
 		}
 	  }
