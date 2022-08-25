@@ -84,6 +84,7 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         $(document).on("click", '#add', function(e) { // *******
@@ -129,8 +130,8 @@
                             "showMethod": "fadeIn",
                             "hideMethod": "fadeOut"
                         }
-                        
-                        
+
+
                     } else {
                         toastr["error"](response.message);
 
@@ -157,21 +158,22 @@
 
                 }
             });
-            
-        });
-        function fetch(){
-            $.ajax({
-                url:"fetch",
-                method:"get",
-                dataType:"json",
-                success:function(data){
-                    var tbody="";
 
-                    for(var key in data){
+        });
+
+        function fetch() {
+            $.ajax({
+                url: "fetch",
+                method: "get",
+                dataType: "json",
+                success: function(data) {
+                    var tbody = "";
+
+                    for (var key in data) {
                         tbody += "<tr>";
-                        tbody += "<td>"+ data[key]['student_name'] +"</td>";
-                        tbody += "<td>"+ data[key]['phone_number'] +"</td>";
-                        tbody += "<td>"+ data[key]['gender'] +"</td>";
+                        tbody += "<td>" + data[key]['student_name'] + "</td>";
+                        tbody += "<td>" + data[key]['phone_number'] + "</td>";
+                        tbody += "<td>" + data[key]['gender'] + "</td>";
                         tbody += `<td>
                                     <a href="#" id="del" value="${data[key]['id']}">Delete</a>
                                     <a href="#" id="edit" value="${data[key]['id']}">Edit</a>
@@ -183,7 +185,60 @@
             });
         }
         fetch();
+        $(document).on("click", "#del", function(e) {
+            e.preventDefault();
+            var del_id = $(this).attr("value");
+            
 
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger mr-2'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        url:"ajdelete",
+                        type:"post",
+                        dataType:"json",
+                        data:{
+                            del_id:del_id
+                        },
+                        success:function(data){
+                            console.log(data);
+                        }
+                    });
+                    
+                    swalWithBootstrapButtons.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'Your imaginary file is safe :)',
+                        'error'
+                    )
+                }
+            })
+
+        });
     </script>
 </body>
 
