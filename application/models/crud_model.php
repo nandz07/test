@@ -15,6 +15,12 @@
 
                 return $this->db->insert('student', $data);
         }
+        public function delete_entry($id)
+        {
+               
+
+                return $this->db->delete('student', array('id' => $id));
+        }
 
         public function update_entry()
         {

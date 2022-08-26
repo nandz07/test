@@ -217,6 +217,7 @@
                             del_id:del_id
                         },
                         success:function(data){
+                            fetch();
                             console.log(data);
                         }
                     });

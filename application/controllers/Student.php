@@ -623,6 +623,19 @@ class Student extends CI_Controller {
 
 		}
 	  }
+	  public function ajdelete(){
+		if($this->input->is_ajax_request()){
+			$del_id= $this->input->post('del_id');
+		}
+		//$del_id= $this->input->post('del_id');
+		if ($this->crud_model->delete_entry($del_id)){
+			$data=array('respponce'=>"success");
+		}else{
+			$data=array('respponce'=>"error");
+		}
+		echo json_encode($data);
+
+	  }
 
 
 // ********************************
