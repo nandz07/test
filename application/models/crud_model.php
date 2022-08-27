@@ -21,6 +21,15 @@
 
                 return $this->db->delete('student', array('id' => $id));
         }
+        public function single_entry($id){
+                $this->db->select("*");
+                $this->db->from("student");
+                $this->db->where("id",$id);
+                $query = $this->db->get();
+                if(count($query->result())>0){
+                        return $query->row();//new 
+                }
+        }
 
         public function update_entry()
         {

@@ -29,7 +29,7 @@
                     Add
                 </button>
 
-                <!-- Modal -->
+                <!-- Modal for Add -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -50,6 +50,38 @@
 
                                         <label for="">gender</label>
                                         <input type="text" id="gender" class="form-control">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="add">add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal for Edit -->
+                <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="" method="POST" id="form">
+                                    <div class="form-group">
+                                        <label for="">name</label><span></span>
+                                        <input type="text" id="edit_name" class="form-control">
+
+                                        <label for="">phonenumber</label>
+                                        <input type="text" id="edit_phonenumber" class="form-control">
+
+                                        <label for="">gender</label>
+                                        <input type="text" id="edit_gender" class="form-control">
                                     </div>
                                 </form>
                             </div>
@@ -248,7 +280,30 @@
             })
 
         });
-        $(document).on
+        $(document).on("click","#edit",function(e){
+            e.preventDefault();
+            var edit_id =$(this).attr("value");
+            //alert(edit_id);
+            if (edit_id==""){
+                alert("id need");
+            }else{
+                $.ajax({
+                    url:"ajcredit",
+                    type:"post",
+                    dataType:"json",
+                    data:{
+                        edit_id:edit_id
+                    },
+                    success:function(data){
+                        //console.log(data);
+                        $('#editModal').modal('show');
+                        $('#edit_name').val(data.post.student_name);
+                        $('#edit_phonenumber').val(data.post.phone_number);
+                        $('#edit_gender').val(data.post.gender);
+                    }
+                });
+            }
+        });
     </script>
 </body>
 

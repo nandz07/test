@@ -566,6 +566,38 @@ class Student extends CI_Controller {
 		echo json_encode($data);
 		//return $this->response->setJSON($data);
 	  }
+
+	  public function formValidation(){
+
+		
+		$this->load->view("formValidation");
+	  }
+	  public function validation(){
+		?>
+		<script>
+			console.log("hai");
+		</script>
+		<?php
+		$this->load->library('form_validation');//load form validation lib
+		$this->form_validation->set_rules('name','Name','required');//check some value is there or not
+		$this->form_validation->set_rules('phonenumber','Phonenumber','required');
+		$this->form_validation->set_rules('gender','Gender','required');
+		if($this->formValidation->run()){
+			$array=array(
+				'success'=>'<div class="alert alert-success">Thank you for contact'
+			);
+		}else{
+			$array = array(
+				'error' =>true,
+				'name_error' =>form_error('name'),
+				'phonenumber_error' =>form_error('phonenumber'),
+				'gender_error' =>form_error('gender'),
+
+			);
+		}
+	  }public function samp(){
+		$this->load->view("samp");
+	  }
 	  //************************* */
 
 	  public function ajcr(){
@@ -636,40 +668,21 @@ class Student extends CI_Controller {
 		echo json_encode($data);
 
 	  }
+	  public function ajcredit(){
+		if($this->input->is_ajax_request()){
+			$edit_id=$this->input->post('edit_id');
+		}
+		if($post =$this->crud_model->single_entry($edit_id)){
+			$data=array('response'=>"success",'post'=>$post);
+		}else{
+			$data=array('response'=>"success",'message'=>'failed');
+		}
+		echo json_encode($data);
+	  }
 
 
 // ********************************
-	  public function formValidation(){
-
-		
-		$this->load->view("formValidation");
-	  }
-	  public function validation(){
-		?>
-		<script>
-			console.log("hai");
-		</script>
-		<?php
-		$this->load->library('form_validation');//load form validation lib
-		$this->form_validation->set_rules('name','Name','required');//check some value is there or not
-		$this->form_validation->set_rules('phonenumber','Phonenumber','required');
-		$this->form_validation->set_rules('gender','Gender','required');
-		if($this->formValidation->run()){
-			$array=array(
-				'success'=>'<div class="alert alert-success">Thank you for contact'
-			);
-		}else{
-			$array = array(
-				'error' =>true,
-				'name_error' =>form_error('name'),
-				'phonenumber_error' =>form_error('phonenumber'),
-				'gender_error' =>form_error('gender'),
-
-			);
-		}
-	  }public function samp(){
-		$this->load->view("samp");
-	  }
+	 
 
 	  
 
