@@ -629,9 +629,9 @@ class Student extends CI_Controller {
 		}
 		//$del_id= $this->input->post('del_id');
 		if ($this->crud_model->delete_entry($del_id)){
-			$data=array('respponce'=>"success");
+			$data = array('response' => "success", 'message' => 'data added successfully');
 		}else{
-			$data=array('respponce'=>"error");
+			$data=array('response'=>"error");
 		}
 		echo json_encode($data);
 

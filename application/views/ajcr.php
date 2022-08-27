@@ -188,7 +188,7 @@
         $(document).on("click", "#del", function(e) {
             e.preventDefault();
             var del_id = $(this).attr("value");
-            
+
 
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
@@ -210,23 +210,31 @@
                 if (result.isConfirmed) {
 
                     $.ajax({
-                        url:"ajdelete",
-                        type:"post",
-                        dataType:"json",
-                        data:{
-                            del_id:del_id
+                        url: "ajdelete",
+                        type: "post",
+                        dataType: "json",
+                        data: {
+                            del_id: del_id
                         },
-                        success:function(data){
-                            fetch();
-                            console.log(data);
+                        success: function(data) {
+
+
+                            console.log(data.response);
+                            if (data.response == 'success') {
+                                swalWithBootstrapButtons.fire(
+                                    'Deleted!',
+                                    'Your file has been deleted.',
+                                    'success'
+                                )
+                                fetch();
+                            }
+
                         }
                     });
-                    
-                    swalWithBootstrapButtons.fire(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    )
+
+
+
+
                 } else if (
                     /* Read more about handling dismissals below */
                     result.dismiss === Swal.DismissReason.cancel
@@ -240,6 +248,7 @@
             })
 
         });
+        $(document).on
     </script>
 </body>
 
