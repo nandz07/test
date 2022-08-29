@@ -46,7 +46,7 @@
                                         <input type="text" id="name" class="form-control">
 
                                         <label for="">phonenumber</label>
-                                        <input type="text" id="phonenumber" class="form-control">
+                                        <input type="tel" id="phonenumber" class="form-control">
 
                                         <label for="">gender</label>
                                         <input type="text" id="gender" class="form-control">
@@ -74,6 +74,9 @@
                             <div class="modal-body">
                                 <form action="" method="POST" id="form">
                                     <div class="form-group">
+
+                                        <input type="hidden" id="edit_id" class="form-control" >
+
                                         <label for="">name</label><span></span>
                                         <input type="text" id="edit_name" class="form-control">
 
@@ -87,7 +90,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" id="add">add</button>
+                                <button type="button" class="btn btn-primary" id="update">Update</button>
                             </div>
                         </div>
                     </div>
@@ -280,29 +283,108 @@
             })
 
         });
-        $(document).on("click","#edit",function(e){
+        $(document).on("click", "#edit", function(e) {
             e.preventDefault();
-            var edit_id =$(this).attr("value");
+            var edit_id = $(this).attr("value");
             //alert(edit_id);
-            if (edit_id==""){
+            if (edit_id == "") {
                 alert("id need");
-            }else{
+            } else {
                 $.ajax({
-                    url:"ajcredit",
-                    type:"post",
-                    dataType:"json",
-                    data:{
-                        edit_id:edit_id
+                    url: "ajcredit",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        edit_id: edit_id
                     },
-                    success:function(data){
+                    success: function(data) {
                         //console.log(data);
                         $('#editModal').modal('show');
+                        $('#edit_id').val(data.post.id);
                         $('#edit_name').val(data.post.student_name);
                         $('#edit_phonenumber').val(data.post.phone_number);
                         $('#edit_gender').val(data.post.gender);
                     }
                 });
             }
+        });
+        $(document).on("click", "#update", function(e) {
+            e.preventDefault();
+            //alert("hai");
+            var edit_id = $("#edit_id").val();
+            var edit_name = $("#edit_name").val();
+            var edit_phonenumber = $("#edit_phonenumber").val();
+            var edit_gender = $("#edit_gender").val();
+
+            //alert(edit_name);
+            var DataJSON = {
+                edit_id: edit_id,
+                edit_name: edit_name,
+                edit_phonenumber: edit_phonenumber,
+                edit_gender: edit_gender
+            };
+            //alert(DataJSON.edit_gender);
+
+            $.ajax({
+                method: "post",
+                url: "ajcrupdate",
+                dataType: "json",
+                data: DataJSON,
+                success: function(response) {
+                    console.log(response);
+                    fetch();
+                    $('#editModal').modal('hide')
+                    $('#form')[0].reset();
+                    if (response.message == "success") {
+                        //toastr["success"](response.message);
+                        toster
+
+                        toastr.options = {
+                            "closeButton": false,
+                            "debug": false,
+                            "newestOnTop": false,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut",
+                        }
+
+
+                    } else {
+                        toastr["error"](response.message);
+
+                        toastr.options = {
+                            "closeButton": true,
+                            "debug": false,
+                            "newestOnTop": false,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut",
+                            "setTextColor": "green"
+                        }
+                    }
+
+
+                }
+            });
+
         });
     </script>
 </body>

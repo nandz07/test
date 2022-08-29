@@ -679,6 +679,46 @@ class Student extends CI_Controller {
 		}
 		echo json_encode($data);
 	  }
+	  public function ajcrupdate(){
+		if($this->input->is_ajax_request()){
+			$this->form_validation->set_rules('edit_name', 'Name', 'required');
+			$this->form_validation->set_rules('edit_phonenumber', 'Phonenumber', 'required');
+			$this->form_validation->set_rules('edit_gender', 'Gender', 'required');
+			if ($this->form_validation->run() == FALSE)
+                {
+					$data = array('response' => "error", 'message' => validation_errors());
+                }
+                else
+                {	
+					$id= $this->input->post('edit_id');
+					 $name= $this->input->post('edit_name');
+					 $phonenumber= $this->input->post('edit_phonenumber');
+					 $gender= $this->input->post('edit_gender');
+			
+			
+					 $ajax_data=[
+						"id" => $id,
+					 	"student_name" => $name,
+						"phone_number" => $phonenumber,
+					 	"gender" => $gender];
+					 
+					//  	$hai=$this->db->insert("student",$newdata);
+					//$hai=true;
+					//$ajax_data = $this->input->post();
+					//$hai=$this->db->insert("student",$newdata);
+					if($this->crud_model->update_entry($ajax_data)){
+
+						$data = array('response' => "success", 'message' => 'data updated');
+					}else{
+						$data = array('response' => "error", 'message' => 'failed');
+					}
+                }
+		}else{
+			echo "No direct script access allowed";
+		}
+		
+		echo json_encode($data);
+	  }
 
 
 // ********************************

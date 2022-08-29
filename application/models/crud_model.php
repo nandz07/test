@@ -31,13 +31,11 @@
                 }
         }
 
-        public function update_entry()
+        public function update_entry($data)
         {
-                $this->title    = $_POST['title'];
-                $this->content  = $_POST['content'];
-                $this->date     = time();
+                
 
-                $this->db->update('entries', $this, array('id' => $_POST['id']));
+                return $this->db->update('student', $data, array('id' => $data['id']));
         }
 
 }
