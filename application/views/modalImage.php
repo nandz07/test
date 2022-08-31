@@ -25,7 +25,7 @@
         <div class="row">
             <div class="col-md-12 mt-2">
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" onclick="check()">
                     Add
                 </button>
 
@@ -43,8 +43,14 @@
                                 <form id="submit_form">
                                     <div class="form-group">
 
-                                        <label for="">name</label><span></span>
-                                        <input type="text" id="name" name="name" class="form-control">
+                                        <label for="">name</label><span id="name_span" style="color:red"></span>
+                                        <input type="text" id="name" name="name" class="form-control" oninput="checkName()">
+
+                                        <label for="">phonenumber</label><span id="phone_number_span" style="color:red"></span>
+                                        <input type="text" id="phone_number" name="phone_number" class="form-control" oninput="checkPhonenumber()" >
+
+                                        <label for="">gender</label><span></span>
+                                        <input type="text" id="gender" name="gender" class="form-control">
                                         
                                         <label for="">image</label>
                                         <input type="file" id="image" name="file" class="form-control">
@@ -65,10 +71,20 @@
             </div>
         </div>
 
-        <div id="preview">
-            <h3>image</h3>
-            <div id="image_preview">
+        <div class="row">
+            <div class="col-md-12 mt-3">
+                <table class="table">
+                    <thead>
+                        <th>name</th>
+                        <th>phonenumber</th>
+                        <th>gender</th>
+                        <th>image</th>
+                        <th>operations</th>
+                    </thead>
+                    <tbody id="tbody">
 
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -88,12 +104,17 @@
                 var formData = new FormData(this);
                 //alert(formData);
                 var name = $("#name").val();
-                
+                var name = $("#gender").val();
+                var phone_number=$("#phone_number").val();
 
-                var DataJSON = {
-                name: name,
-            };
+            //     var DataJSON = {
+            //     name: name,
+            //     gender:gender,
+            //     phone_number:phone_number
+            // };
+            var DataJSON=$('#submit_form').serialize();
                 console.log(formData);
+                console.log(DataJSON);
                 $.ajax({
                     url:"modalImageInsert",
                     type:"post",
@@ -106,6 +127,41 @@
                 });
             });
         });
+        function checkName(){
+            var data = 'name='+$('#name').val();
+            if(data.length<6){
+                $('#name_span').text(" need this feild");
+                
+                //alert("name"+data.length);
+            }else{
+                $('#name_span').text(" ");
+                var name_status=true;
+            }
+        }
+        function checkPhonenumber(){
+            var data = 'phone_number='+$('#phone_number').val();
+            if(data.length<14){
+                $('#phone_number_span').text(" need 10 numbers");
+                
+                //alert("phone"+data.length);
+            }
+            else{
+                $('#phone_number_span').text(" ");
+                var phone_number_status=true;
+            }
+        }
+        function check(){
+            checkName();
+            checkPhonenumber();
+        }
+        function fetch(){
+            $.ajax({
+                url:"fetch",
+                method:"GET",
+                dataType:"json",
+                success
+            });
+        }
     </script>
 </body>
 

@@ -728,18 +728,25 @@ class Student extends CI_Controller {
 	 public function modalImageInsert(){
 		$file_name=$_FILES['file']['name'];
 		$name= $this->input->post('name');
+		$gender= $this->input->post('gender');
+		$phone_number= $this->input->post('phone_number');
 		if ($file_name != NULL) {
 			$temp = $_FILES['file']['tmp_name'];
 			$new_file_name = time() . $file_name;
 			move_uploaded_file($temp, 'images/' . $new_file_name);
-			echo "If";
+			echo $name;
 			$image = 'images/' . $new_file_name;
+			echo $image;
+			echo $gender;
+			
 		} else {
-			echo "else";
+			
 		}
 		
 		$new = [
 			"student_name"=>$name,
+			"phone_number"=>$phone_number,
+			"gender"=>$gender,
 			"image" => 'images/' . $new_file_name
 			];
 		$res = $this->db->insert("student", $new);
