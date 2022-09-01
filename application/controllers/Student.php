@@ -734,10 +734,10 @@ class Student extends CI_Controller {
 			$temp = $_FILES['file']['tmp_name'];
 			$new_file_name = time() . $file_name;
 			move_uploaded_file($temp, 'images/' . $new_file_name);
-			echo $name;
+			// echo $name;
 			$image = 'images/' . $new_file_name;
-			echo $image;
-			echo $gender;
+			// echo $image;
+			// echo $gender;
 			
 		} else {
 			
@@ -750,6 +750,11 @@ class Student extends CI_Controller {
 			"image" => 'images/' . $new_file_name
 			];
 		$res = $this->db->insert("student", $new);
+		
+		echo json_encode($res);
+	 }
+	 function sampleValidation(){
+		$this->load->view("sampleValidation");
 	 }
 
 	  

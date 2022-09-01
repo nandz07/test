@@ -49,11 +49,11 @@
                                         <label for="">phonenumber</label><span id="phone_number_span" style="color:red"></span>
                                         <input type="text" id="phone_number" name="phone_number" class="form-control" oninput="checkPhonenumber()" >
 
-                                        <label for="">gender</label><span></span>
-                                        <input type="text" id="gender" name="gender" class="form-control">
+                                        <label for="">gender</label><span id="gender_span" style="color:red"></span>
+                                        <input type="text" id="gender" name="gender" class="form-control" oninput="checkGender()">
                                         
-                                        <label for="">image</label>
-                                        <input type="file" id="image" name="file" class="form-control">
+                                        <label for="">image</label><span id="image_span" style="color:red"></span>
+                                        <input type="file" id="image" name="file" class="form-control" oninput="checkImage()">
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -98,9 +98,18 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
+var name_status=false;
+var phone_number_status=false;
+var gender_status=false;
+var image_status=false;
         $(document).ready(function() {
             $("#submit_form").on("submit", function(e) {
                 e.preventDefault();
+                
+                //alert(name_status);
+                if(name_status!=null && phone_number_status!=null && gender_status!=null && image_status!=null){
+                    
+                
                 var formData = new FormData(this);
                 //alert(formData);
                 var name = $("#name").val();
@@ -113,47 +122,88 @@
             //     phone_number:phone_number
             // };
             var DataJSON=$('#submit_form').serialize();
-                console.log(formData);
-                console.log(DataJSON);
+                // console.log(formData);
+                // console.log(DataJSON);
                 $.ajax({
                     url:"modalImageInsert",
                     type:"post",
                     data:formData,DataJSON,
                     contentType:false,
                     processData:false,
-                    success:function(data){
+                    success: function(response) {
+                    
+                    
+                        $('#exampleModal').modal('hide')
+                        $('#submit_form')[0].reset();
+                    
 
-                    }
+
+                }
                 });
+            }else{
+                check();
+            }
             });
         });
         function checkName(){
             var data = 'name='+$('#name').val();
             if(data.length<6){
                 $('#name_span').text(" need this feild");
-                
+                name_status=false;
                 //alert("name"+data.length);
             }else{
                 $('#name_span').text(" ");
-                var name_status=true;
+                
+                name_status=true;
+                //alert(name_status);
+
             }
         }
         function checkPhonenumber(){
             var data = 'phone_number='+$('#phone_number').val();
-            if(data.length<14){
-                $('#phone_number_span').text(" need 10 numbers");
-                
+            if(data.length<23){
+                $('#phone_number_span').text(" need valid phone number ..!");
+                phone_number_status=false;
                 //alert("phone"+data.length);
             }
             else{
                 $('#phone_number_span').text(" ");
-                var phone_number_status=true;
+                //alert(name_status);
+                 phone_number_status=true;
             }
         }
+        function checkGender(){
+            var data = 'gender='+$('#gender').val();
+            if(data.length<8){
+                $('#gender_span').text(" need this feild");
+                gender_status=true;
+                //alert("gender"+data.length);
+            }
+            else{
+                $('#gender_span').text(" ");
+                gender_status=true;
+            }
+        }
+    function checkImage(){
+        var data='image'+$('#image').val();
+        if(data.length<6){
+            $('#image_span').text(" need this feild");
+            image_status=true;
+                //alert("image"+data.length);
+            }
+            else{
+                $('#image_span').text(" ");
+                image_status=true;
+        }
+    }
         function check(){
             checkName();
             checkPhonenumber();
+            checkGender();
+            checkImage()
         }
+        
+
         function fetch(){
             $.ajax({
                 url:"fetch",
