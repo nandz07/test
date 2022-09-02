@@ -37,6 +37,12 @@
 
                 return $this->db->update('student', $data, array('id' => $data['id']));
         }
+        public function selectTable(){
+                $this->db->select("*");
+                $this->db->from("student");
+                $query=$this->db->get();
+                return $query->result();
+        }
 
 }
 ?>

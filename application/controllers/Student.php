@@ -756,6 +756,19 @@ class Student extends CI_Controller {
 	 function sampleValidation(){
 		$this->load->view("sampleValidation");
 	 }
+	 public function modalValidation(){
+		$this->load->view("modalValidation");
+	 }
+	 public function fetchTable(){
+		if($this->input->is_ajax_request()){
+			if($post=$this->crud_model->selectTable()){
+				$data=array("response"=>'success','post'=>$post);
+			}else{
+				$data=array('response'=>'error','message'=>'fail');
+			}
+			echo json_encode($post); 
+		}
+	 }
 
 	  
 
