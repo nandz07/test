@@ -24,7 +24,7 @@
         </div>
         <div class="row">
             <div class="col-md-12 mt-2">
-                
+
 
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -40,22 +40,38 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                            <form action="" method="POST" id="form">
+                                <form action="" method="POST" id="addForm">
                                     <div class="form-group">
-                                        <label for="">name</label><span></span>
-                                        <input type="text" id="name" class="form-control">
+                                        <div>
 
-                                        <label for="">phonenumber</label>
-                                        <input type="tel" id="phonenumber" class="form-control">
+                                            <label for="">name</label><span></span>
+                                            <input type="text" id="name" class="form-control" name="name">
+                                        </div>
 
-                                        <label for="">gender</label>
-                                        <input type="text" id="gender" class="form-control">
+                                        <div>
+                                            
+                                            <label for="">phonenumber</label>
+                                            <input type="tel" id="phonenumber" class="form-control" name="phonenumber">
+                                        </div>
+                                        <div>
+
+                                            
+                                            <label for="">gender</label>
+                                            <input type="text" id="gender" class="form-control" name="gender">
+                                        </div>
+                                        <div>
+
+                                            
+                                            <label for="">Image</label>
+                                            <input type="file" class="form-control" id="image" name="file" required>
+                                        </div>
+                                        
                                     </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Save changes</button>
+                                <button type="button" class="btn btn-primary" onclick="modal2Add()">Save changes</button>
                             </div>
                         </div>
                     </div>
@@ -83,12 +99,43 @@
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    
 
     <!-- Option 2: Separate Popper and Bootstrap JS -->
     <!--
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
     -->
+    <script>
+        function modal2Add(){
+            
+            // var formData = new FormData(document.getElementById('addForm'));
+            // var DataJSON=$(document.getElementById('addForm')).serialize();
+            // console.log(formData);
+            // console.log(DataJSON);
+            // $.ajax({
+
+            // });
+            var formData=new FormData(document.getElementById('addForm'));
+            var DataJSON=$(document.getElementById('addForm')).serialize();
+
+            $.ajax({
+                
+                url:"modal2Add",
+                    type:"post",
+                    data:formData,DataJSON,
+                    dataType:"json",
+                    contentType:false,
+                    processData:false,
+                    success: function(response) {
+                        console.log(response);
+                   
+                    $('#exampleModal').modal('hide')
+                    $('#addForm')[0].reset();
+                    }
+            });
+        }
+    </script>
 </body>
 
 </html>
