@@ -769,6 +769,47 @@ class Student extends CI_Controller {
 			echo json_encode($post); 
 		}
 	 }
+	 public function modalValidationInsert(){
+		if($this->input->is_ajax_request()){
+			$this->form_validation->set_rules('name', 'Name', 'required');
+			$this->form_validation->set_rules('phonenumber', 'Phonenumber', 'required');
+			$this->form_validation->set_rules('gender', 'Gender', 'required');
+			if ($this->form_validation->run() == FALSE)
+                {
+					$data = array('response' => "error", 'message' => validation_errors());
+                }
+                else
+                {
+					 $name= $this->input->post('name');
+					 $phonenumber= $this->input->post('phonenumber');
+					 $gender= $this->input->post('gender');
+			
+			
+					 $ajax_data=[
+					 	"student_name" => $name,
+						"phone_number" => $phonenumber,
+					 	"gender" => $gender];
+					 
+					//  	$hai=$this->db->insert("student",$newdata);
+					//$hai=true;
+					//$ajax_data = $this->input->post();
+					//$hai=$this->db->insert("student",$newdata);
+					if($this->crud_model->insert_entry($ajax_data)){
+
+						$data = array('response' => "success", 'message' => 'data added successfully');
+					}else{
+						$data = array('response' => "error", 'message' => 'failed');
+					}
+                }
+		}else{
+			echo "No direct script access allowed";
+		}
+		
+		echo json_encode($data);
+	  }
+	  public function modal2(){
+		$this->load->view("modal2");
+	 }
 
 	  
 

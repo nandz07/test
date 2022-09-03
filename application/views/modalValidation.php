@@ -27,7 +27,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="" class="row g-3 needs-validation" novalidate>
+                    <form id="addForm" class="row g-3 needs-validation" novalidate>
                         <div>
                             <label for="">Name</label>
                             <input type="text" class="form-control" id="name" required>
@@ -63,7 +63,7 @@
                         <div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                <button type="submit" class="btn btn-primary" onclick="addData()">Save changes</button>
                             </div>
                         </div>
                     </form>
@@ -91,28 +91,66 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script>
+
+$('#form').validate({
+
+//... your validation rules come here,
+
+submitHandler: function(form) {
+    $.ajax({
+        url: form.action,
+        type: form.method,
+        data: $(form).serialize(),
+        success: function(response) {
+            $('#answers').html(response);
+        }            
+    });
+}
+});
         
         // Example starter JavaScript for disabling form submissions if there are invalid fields
-        (function() {
-            'use strict'
+        // (function() {
+        //     'use strict'
 
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            var forms = document.querySelectorAll('.needs-validation')
+        //     // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        //     var forms = document.querySelectorAll('.needs-validation')
 
-            // Loop over them and prevent submission
-            Array.prototype.slice.call(forms)
-                .forEach(function(form) {
-                    form.addEventListener('submit', function(event) {
-                        if (!form.checkValidity()) {
-                            event.preventDefault()
-                            event.stopPropagation()
-                        }
+        //     // Loop over them and prevent submission
+        //     Array.prototype.slice.call(forms)
+        //         .forEach(function(form) {
+        //             form.addEventListener('submit', function(event) {
+        //                 if (!form.checkValidity()) {
+        //                     event.preventDefault()
+        //                     event.stopPropagation()
+        //                 }
 
-                        form.classList.add('was-validated')
-                    }, false)
-                })
-        })()
+        //                 form.classList.add('was-validated')
+        //             }, false)
+        //         })
+        // })()
         
+        function addData(){
+            var formData = new FormData(document.getElementById('addForm'));
+            var DataJSON=$(document.getElementById('addForm')).serialize();
+            alert(DataJSON);
+
+            $.ajax({
+                    url:"modalValidationInsert",
+                    type:"post",
+                    data:formData,DataJSON,
+                    contentType:false,
+                    processData:false,
+                    success: function(response) {
+                    
+                    
+                        // $('#exampleModal').modal('hide')
+                        // $('#submit_form')[0].reset();
+                    
+
+
+                }
+            });
+        }
         function fetchTable(){
             $.ajax({
                 url:"fetchTable",
