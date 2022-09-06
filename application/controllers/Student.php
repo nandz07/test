@@ -856,8 +856,11 @@ class Student extends CI_Controller
 
 		echo json_encode($data);
 	}
-	
-	
+	//**************** */
+	public function modalValidation2()
+	{
+		$this->load->view("modalValidation2");
+	}
 	
 }
 ?>
