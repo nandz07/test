@@ -861,6 +861,142 @@ class Student extends CI_Controller
 	{
 		$this->load->view("modalValidation2");
 	}
+	//PHP CRUD without Refresh using Ajax and DataTables Tutorial (youtube ->SourceCodester)
+	//https://youtu.be/y2l7fVJQeAY
+
+	public function ajaxtable()
+	{
+		
+		$this->load->view("ajaxtable");
+	}
+	public function get_authors(){
+		extract($_POST);
+		$totalCount = $this->db->query("SELECT * FROM `authors` ")->num_rows;
+		$search_where = "";
+		if(!empty($search)){
+			$search_where = " where ";
+			$search_where .= " first_name LIKE '%{$search['value']}%' ";
+			$search_where .= " OR last_name LIKE '%{$search['value']}%' ";
+			$search_where .= " OR email LIKE '%{$search['value']}%' ";
+			$search_where .= " OR date_format(birthdate,'%M %d, %Y') LIKE '%{$search['value']}%' ";
+		}
+		$columns_arr = array("id",
+                     "first_name",
+                     "last_name",
+                     "email",
+                     "unix_timestamp(birthdate)");
+		$query = $this->db->query("SELECT * FROM `authors` {$search_where} ORDER BY {$columns_arr[$order[0]['column']]} {$order[0]['dir']} limit {$length} offset {$start} ");
+		$recordsFilterCount = $this->db->query("SELECT * FROM `authors` {$search_where} ")->num_rows;
+		$recordsTotal= $totalCount;
+		$recordsFiltered= $recordsFilterCount;
+		$data = array();
+		$i= 1 + $start;
+//-----------------------------------
+foreach ($query->result_array() as $row)
+{
+	$row['no'] = $i++;
+		$row['birthdate'] = date("F d, Y",strtotime($row['birthdate']));
+		$data[] = $row;
+}
+		//---------------
+		// $row[]= $query->row();
+		// if (isset($row))
+		// {
+		// 	$row['no'] = $i++;
+		// 	// $row['birthdate'] = date("F d, Y",strtotime($row['birthdate']));
+		// 	$data[] = $row;
+		// }
+		//-------------
+
+		// while($row = $query->fetch_assoc()){
+		// 	$row['no'] = $i++;
+		// 	$row['birthdate'] = date("F d, Y",strtotime($row['birthdate']));
+		// 	$data[] = $row;
+		// }
+		echo json_encode(array('draw'=>$draw,
+                       'recordsTotal'=>$recordsTotal,
+                       'recordsFiltered'=>$recordsFiltered,
+                       'data'=>$data
+                       )
+		);
+		// $this->db->select("*");
+        //         $this->db->from("authors");
+                
+        //         $query = $this->db->get();
+        //         if(count($data=$query->result())>0){
+		// 			echo json_encode($data);
+        //         }
+		// 		echo json_encode($data);
+	}
+	
+// extract($_POST);
+ 
+//$totalCount = $conn->query("SELECT * FROM `authors` ")->num_rows;
+// $search_where = "";
+// if(!empty($search)){
+//     $search_where = " where ";
+//     $search_where .= " first_name LIKE '%{$search['value']}%' ";
+//     $search_where .= " OR last_name LIKE '%{$search['value']}%' ";
+//     $search_where .= " OR email LIKE '%{$search['value']}%' ";
+//     $search_where .= " OR date_format(birthdate,'%M %d, %Y') LIKE '%{$search['value']}%' ";
+// }
+// $columns_arr = array("id",
+//                      "first_name",
+//                      "last_name",
+//                      "email",
+//                      "unix_timestamp(birthdate)");
+// $query = $conn->query("SELECT * FROM `authors` {$search_where} ORDER BY {$columns_arr[$order[0]['column']]} {$order[0]['dir']} limit {$length} offset {$start} ");
+// $recordsFilterCount = $conn->query("SELECT * FROM `authors` {$search_where} ")->num_rows;
+ 
+// $recordsTotal= $totalCount;
+// $recordsFiltered= $recordsFilterCount;
+// $data = array();
+// $i= 1 + $start;
+// while($row = $query->fetch_assoc()){
+//     $row['no'] = $i++;
+//     $row['birthdate'] = date("F d, Y",strtotime($row['birthdate']));
+//     $data[] = $row;
+// }
+// echo json_encode(array('draw'=>$draw,
+//                        'recordsTotal'=>$recordsTotal,
+//                        'recordsFiltered'=>$recordsFiltered,
+//                        'data'=>$data
+//                        )
+// );
+	public function save_data(){
+		if ($this->input->is_ajax_request()) {
+			
+				$first_name = $this->input->post('first_name');
+				$last_name = $this->input->post('last_name');
+				$email = $this->input->post('email');
+				$birthdate = $this->input->post('birthdate');
+
+
+				$ajax_data = [
+					"first_name" => $first_name,
+					"last_name" => $last_name,
+					"email" => $email,
+					"birthdate" => $birthdate
+				];
+
+				//  	$hai=$this->db->insert("student",$newdata);
+				//$hai=true;
+				//$ajax_data = $this->input->post();
+				//$hai=$this->db->insert("student",$newdata);
+				if ($this->crud_model->insert_authors($ajax_data)) {
+
+					$resp['status'] = 'success';
+				} else {
+					$resp['status'] = 'failed';
+					$resp['msg'] = 'An error occured while saving the data. Error: ';
+				}
+			
+		} else {
+			echo "No direct script access allowed";
+		}
+
+		echo json_encode($resp);
+	}
 	
 }
 ?>

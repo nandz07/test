@@ -15,6 +15,12 @@
 
                 return $this->db->insert('student', $data);
         }
+        public function insert_authors($data)
+        {
+               
+
+                return $this->db->insert('authors', $data);
+        }
         public function delete_entry($id)
         {
                
