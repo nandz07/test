@@ -126,6 +126,8 @@ input.error, textarea.error {
     -->
     <script>
         $(document).ready(function() {
+          f=$("#basic-form")  ;
+          console.log(f)
   $("#basic-form").validate({
     errorClass: "error fail-alert",
     validClass: "valid success-alert",

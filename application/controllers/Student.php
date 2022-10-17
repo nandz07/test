@@ -997,6 +997,15 @@ foreach ($query->result_array() as $row)
 
 		echo json_encode($resp);
 	}
+	public function cake(){
+		$this->load->view("cake");
+	}
+	public function cake2(){
+		$this->load->view("cake2");
+	}
+	public function cake3(){
+		$this->load->view("cake3");
+	}
 	
 }
 ?>
