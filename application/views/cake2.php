@@ -88,6 +88,17 @@
                         minlength: "Your data must be at least 8 characters"
                     },
                     age: "Please provide some data"
+                },
+                submitHandler: function(form) {//type of button must be submit
+                    // $.ajax({
+                    //     url: form.action,
+                    //     type: form.method,
+                    //     data: $(form).serialize(),
+                    //     success: function(response) {
+                    //         $('#answers').html(response);
+                    //     }
+                    // });
+                    alert("hai");
                 }
             });
         });
