@@ -834,18 +834,18 @@ class Student extends CI_Controller
 		// echo $name;
 		// echo $phonenumber;
 		// echo $gender;
-		$file_name=$_FILES['file']['name'];
-		if($file_name !=null){
-			$temp=$_FILES['file']['tmp_name'];
-			$new_file_name=time().$file_name;
-			move_uploaded_file($temp,'images/'.$new_file_name);
-			$image='images/'.$new_file_name;
+		$file_name = $_FILES['file']['name'];
+		if ($file_name != null) {
+			$temp = $_FILES['file']['tmp_name'];
+			$new_file_name = time() . $file_name;
+			move_uploaded_file($temp, 'images/' . $new_file_name);
+			$image = 'images/' . $new_file_name;
 		}
-		$ajax_data=[
-			"student_name"=>$name,
-			"phone_number"=>$phonenumber,
-			"gender"=>$gender,
-			"image"=>$image
+		$ajax_data = [
+			"student_name" => $name,
+			"phone_number" => $phonenumber,
+			"gender" => $gender,
+			"image" => $image
 		];
 		if ($this->crud_model->insert_entry($ajax_data)) {
 
@@ -866,38 +866,40 @@ class Student extends CI_Controller
 
 	public function ajaxtable()
 	{
-		
+
 		$this->load->view("ajaxtable");
 	}
-	public function get_authors(){
+	public function get_authors()
+	{
 		extract($_POST);
 		$totalCount = $this->db->query("SELECT * FROM `authors` ")->num_rows;
 		$search_where = "";
-		if(!empty($search)){
+		if (!empty($search)) {
 			$search_where = " where ";
 			$search_where .= " first_name LIKE '%{$search['value']}%' ";
 			$search_where .= " OR last_name LIKE '%{$search['value']}%' ";
 			$search_where .= " OR email LIKE '%{$search['value']}%' ";
 			$search_where .= " OR date_format(birthdate,'%M %d, %Y') LIKE '%{$search['value']}%' ";
 		}
-		$columns_arr = array("id",
-                     "first_name",
-                     "last_name",
-                     "email",
-                     "unix_timestamp(birthdate)");
+		$columns_arr = array(
+			"id",
+			"first_name",
+			"last_name",
+			"email",
+			"unix_timestamp(birthdate)"
+		);
 		$query = $this->db->query("SELECT * FROM `authors` {$search_where} ORDER BY {$columns_arr[$order[0]['column']]} {$order[0]['dir']} limit {$length} offset {$start} ");
 		$recordsFilterCount = $this->db->query("SELECT * FROM `authors` {$search_where} ")->num_rows;
-		$recordsTotal= $totalCount;
-		$recordsFiltered= $recordsFilterCount;
+		$recordsTotal = $totalCount;
+		$recordsFiltered = $recordsFilterCount;
 		$data = array();
-		$i= 1 + $start;
-//-----------------------------------
-foreach ($query->result_array() as $row)
-{
-	$row['no'] = $i++;
-		$row['birthdate'] = date("F d, Y",strtotime($row['birthdate']));
-		$data[] = $row;
-}
+		$i = 1 + $start;
+		//-----------------------------------
+		foreach ($query->result_array() as $row) {
+			$row['no'] = $i++;
+			$row['birthdate'] = date("F d, Y", strtotime($row['birthdate']));
+			$data[] = $row;
+		}
 		//---------------
 		// $row[]= $query->row();
 		// if (isset($row))
@@ -913,99 +915,138 @@ foreach ($query->result_array() as $row)
 		// 	$row['birthdate'] = date("F d, Y",strtotime($row['birthdate']));
 		// 	$data[] = $row;
 		// }
-		echo json_encode(array('draw'=>$draw,
-                       'recordsTotal'=>$recordsTotal,
-                       'recordsFiltered'=>$recordsFiltered,
-                       'data'=>$data
-                       )
+		echo json_encode(
+			array(
+				'draw' => $draw,
+				'recordsTotal' => $recordsTotal,
+				'recordsFiltered' => $recordsFiltered,
+				'data' => $data
+			)
 		);
 		// $this->db->select("*");
-        //         $this->db->from("authors");
-                
-        //         $query = $this->db->get();
-        //         if(count($data=$query->result())>0){
+		//         $this->db->from("authors");
+
+		//         $query = $this->db->get();
+		//         if(count($data=$query->result())>0){
 		// 			echo json_encode($data);
-        //         }
+		//         }
 		// 		echo json_encode($data);
 	}
-	
-// extract($_POST);
- 
-//$totalCount = $conn->query("SELECT * FROM `authors` ")->num_rows;
-// $search_where = "";
-// if(!empty($search)){
-//     $search_where = " where ";
-//     $search_where .= " first_name LIKE '%{$search['value']}%' ";
-//     $search_where .= " OR last_name LIKE '%{$search['value']}%' ";
-//     $search_where .= " OR email LIKE '%{$search['value']}%' ";
-//     $search_where .= " OR date_format(birthdate,'%M %d, %Y') LIKE '%{$search['value']}%' ";
-// }
-// $columns_arr = array("id",
-//                      "first_name",
-//                      "last_name",
-//                      "email",
-//                      "unix_timestamp(birthdate)");
-// $query = $conn->query("SELECT * FROM `authors` {$search_where} ORDER BY {$columns_arr[$order[0]['column']]} {$order[0]['dir']} limit {$length} offset {$start} ");
-// $recordsFilterCount = $conn->query("SELECT * FROM `authors` {$search_where} ")->num_rows;
- 
-// $recordsTotal= $totalCount;
-// $recordsFiltered= $recordsFilterCount;
-// $data = array();
-// $i= 1 + $start;
-// while($row = $query->fetch_assoc()){
-//     $row['no'] = $i++;
-//     $row['birthdate'] = date("F d, Y",strtotime($row['birthdate']));
-//     $data[] = $row;
-// }
-// echo json_encode(array('draw'=>$draw,
-//                        'recordsTotal'=>$recordsTotal,
-//                        'recordsFiltered'=>$recordsFiltered,
-//                        'data'=>$data
-//                        )
-// );
-	public function save_data(){
+
+	// extract($_POST);
+
+	//$totalCount = $conn->query("SELECT * FROM `authors` ")->num_rows;
+	// $search_where = "";
+	// if(!empty($search)){
+	//     $search_where = " where ";
+	//     $search_where .= " first_name LIKE '%{$search['value']}%' ";
+	//     $search_where .= " OR last_name LIKE '%{$search['value']}%' ";
+	//     $search_where .= " OR email LIKE '%{$search['value']}%' ";
+	//     $search_where .= " OR date_format(birthdate,'%M %d, %Y') LIKE '%{$search['value']}%' ";
+	// }
+	// $columns_arr = array("id",
+	//                      "first_name",
+	//                      "last_name",
+	//                      "email",
+	//                      "unix_timestamp(birthdate)");
+	// $query = $conn->query("SELECT * FROM `authors` {$search_where} ORDER BY {$columns_arr[$order[0]['column']]} {$order[0]['dir']} limit {$length} offset {$start} ");
+	// $recordsFilterCount = $conn->query("SELECT * FROM `authors` {$search_where} ")->num_rows;
+
+	// $recordsTotal= $totalCount;
+	// $recordsFiltered= $recordsFilterCount;
+	// $data = array();
+	// $i= 1 + $start;
+	// while($row = $query->fetch_assoc()){
+	//     $row['no'] = $i++;
+	//     $row['birthdate'] = date("F d, Y",strtotime($row['birthdate']));
+	//     $data[] = $row;
+	// }
+	// echo json_encode(array('draw'=>$draw,
+	//                        'recordsTotal'=>$recordsTotal,
+	//                        'recordsFiltered'=>$recordsFiltered,
+	//                        'data'=>$data
+	//                        )
+	// );
+	public function save_data()
+	{
 		if ($this->input->is_ajax_request()) {
-			
-				$first_name = $this->input->post('first_name');
-				$last_name = $this->input->post('last_name');
-				$email = $this->input->post('email');
-				$birthdate = $this->input->post('birthdate');
+
+			$first_name = $this->input->post('first_name');
+			$last_name = $this->input->post('last_name');
+			$email = $this->input->post('email');
+			$birthdate = $this->input->post('birthdate');
 
 
-				$ajax_data = [
-					"first_name" => $first_name,
-					"last_name" => $last_name,
-					"email" => $email,
-					"birthdate" => $birthdate
-				];
+			$ajax_data = [
+				"first_name" => $first_name,
+				"last_name" => $last_name,
+				"email" => $email,
+				"birthdate" => $birthdate
+			];
 
-				//  	$hai=$this->db->insert("student",$newdata);
-				//$hai=true;
-				//$ajax_data = $this->input->post();
-				//$hai=$this->db->insert("student",$newdata);
-				if ($this->crud_model->insert_authors($ajax_data)) {
+			//  	$hai=$this->db->insert("student",$newdata);
+			//$hai=true;
+			//$ajax_data = $this->input->post();
+			//$hai=$this->db->insert("student",$newdata);
+			if ($this->crud_model->insert_authors($ajax_data)) {
 
-					$resp['status'] = 'success';
-				} else {
-					$resp['status'] = 'failed';
-					$resp['msg'] = 'An error occured while saving the data. Error: ';
-				}
-			
+				$resp['status'] = 'success';
+			} else {
+				$resp['status'] = 'failed';
+				$resp['msg'] = 'An error occured while saving the data. Error: ';
+			}
 		} else {
 			echo "No direct script access allowed";
 		}
 
 		echo json_encode($resp);
 	}
-	public function cake(){
+	public function cake()
+	{
 		$this->load->view("cake");
 	}
-	public function cake2(){
+	public function cake2()
+	{ //real validation of form
 		$this->load->view("cake2");
 	}
-	public function cake3(){
+	public function cake3()
+	{
 		$this->load->view("cake3");
 	}
-	
+	// public function shop()
+	// {
+	// 	$this->load->library('Pagination_bootstrap');
+
+	// 	$this->db->select("*");
+	// 	$this->db->from("products");
+
+	// 	$sql = $this->db->get("");
+	// 	$this->pagination_bootstrap->offset(2);
+		
+	// 	$data['pages']=$this->pagination_bootstrap->render();
+	// 	//$data['base']=array('first' => 'go to first', 'last' => 'go to last', 'next' => 'next', 'prev' => 'prev');
+	// 	// $this->pagination_bootstrap->set_links($dataa);
+
+	// 	$data['cakes'] = $this->pagination_bootstrap->config("students/shop", $sql);
+
+	// 	$this->load->view('shop', $data);
+	// }
+	public function shop2()
+	{
+		$this->load->library('Pagination');//load from system libraries libraries 
+		$this->load->library('Pagination_bootstrap');//load from controller libraries->download from -> 
+		//https://github.com/thiagolima86/codeigniter-pagination-bootstrap/tree/master/application/libraries
+		$this->db->select("*");
+		$this->db->from("products");
+		$sql = $this->db->get("");
+
+		$this->pagination_bootstrap->offset(3);
+
+		$data['cakes']=$this->pagination_bootstrap->config("/student/shop2", $sql);
+		$data['pages']=$this->pagination_bootstrap->render();
+		// $data['cakes']=$sql->result();
+		$this->load->view('shop2', $data);
+		
+	}
 }
 ?>
