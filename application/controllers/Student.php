@@ -1048,5 +1048,8 @@ class Student extends CI_Controller
 		$this->load->view('shop2', $data);
 		
 	}
+	public function type(){
+		$this->load->view('type');
+	}
 }
 ?>
