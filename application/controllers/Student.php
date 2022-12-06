@@ -10,6 +10,9 @@ class Student extends CI_Controller
 		$this->load->helper(array('form', 'url'));
 		$this->load->library(array('form_validation'));
 		$this->load->model('crud_model');
+		$this->load->model('user_model');
+		$this->load->helper('cookie');
+		// $this->load->helper(array('cookie','url'));
 	}
 
 	/**
@@ -1022,7 +1025,7 @@ class Student extends CI_Controller
 
 	// 	$sql = $this->db->get("");
 	// 	$this->pagination_bootstrap->offset(2);
-		
+
 	// 	$data['pages']=$this->pagination_bootstrap->render();
 	// 	//$data['base']=array('first' => 'go to first', 'last' => 'go to last', 'next' => 'next', 'prev' => 'prev');
 	// 	// $this->pagination_bootstrap->set_links($dataa);
@@ -1033,8 +1036,8 @@ class Student extends CI_Controller
 	// }
 	public function shop2()
 	{
-		$this->load->library('Pagination');//load from system libraries libraries 
-		$this->load->library('Pagination_bootstrap');//load from controller libraries->download from -> 
+		$this->load->library('Pagination'); //load from system libraries libraries 
+		$this->load->library('Pagination_bootstrap'); //load from controller libraries->download from -> 
 		//https://github.com/thiagolima86/codeigniter-pagination-bootstrap/tree/master/application/libraries
 		$this->db->select("*");
 		$this->db->from("products");
@@ -1042,14 +1045,86 @@ class Student extends CI_Controller
 
 		$this->pagination_bootstrap->offset(3);
 
-		$data['cakes']=$this->pagination_bootstrap->config("/student/shop2", $sql);
-		$data['pages']=$this->pagination_bootstrap->render();
+		$data['cakes'] = $this->pagination_bootstrap->config("/student/shop2", $sql);
+		$data['pages'] = $this->pagination_bootstrap->render();
 		// $data['cakes']=$sql->result();
 		$this->load->view('shop2', $data);
-		
 	}
-	public function type(){
+	public function type()
+	{
 		$this->load->view('type');
+	}
+	//==================== email varification	===========
+
+	function register()
+	{
+		//set validation rules
+		$this->form_validation->set_rules('fname', 'First Name', 'trim|required|alpha|min_length[3]|max_length[30]|xss_clean');
+		$this->form_validation->set_rules('lname', 'Last Name', 'trim|required|alpha|min_length[3]|max_length[30]|xss_clean');
+		$this->form_validation->set_rules('email', 'Email ID', 'trim|required|valid_email|is_unique[user.email]');
+		$this->form_validation->set_rules('password', 'Password', 'trim|required|matches[cpassword]|md5');
+		$this->form_validation->set_rules('cpassword', 'Confirm Password', 'trim|required');
+
+		//validate form input
+		if ($this->form_validation->run() == FALSE) {
+			// fails
+			$this->load->view('user_registration_view');
+		} else {
+			//insert the user registration details into database
+			$data = array(
+				'fname' => $this->input->post('fname'),
+				'lname' => $this->input->post('lname'),
+				'email' => $this->input->post('email'),
+				'password' => $this->input->post('password')
+			);
+
+			// insert form data into database
+			if ($this->user_model->insertUser($data)) {
+				// send email
+				if ($this->user_model->sendEmail($this->input->post('email'))) {
+					// successfully sent mail
+					$this->session->set_flashdata('msg', '<div class="alert alert-success text-center">You are Successfully Registered! Please confirm the mail sent to your Email-ID!!!</div>');
+					redirect('user/register');
+				} else {
+					// error
+					$this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">Oops! Error.  Please try again later!!!</div>');
+					redirect('user/register');
+				}
+			} else {
+				// error
+				$this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">Oops! Error.  Please try again later!!!</div>');
+				redirect('user/register');
+			}
+		}
+	}
+	function verify($hash = NULL)
+	{
+		if ($this->user_model->verifyEmailID($hash)) {
+			$this->session->set_flashdata('verify_msg', '<div class="alert alert-success text-center">Your Email Address is successfully verified! Please login to access your account!</div>');
+			redirect('user/register');
+		} else {
+			$this->session->set_flashdata('verify_msg', '<div class="alert alert-danger text-center">Sorry! There is error verifying your Email Address!</div>');
+			redirect('user/register');
+		}
+	}
+	public function cookiesButton()
+	{
+		// $this->load->helper('cookie');
+		
+		$cookie_name = "user";
+		$cookie_value = "John Doe";
+		setcookie($cookie_name, $cookie_value, time() + (10), "/"); // 86400 = 1 day
+		// setcookie("test_cookie", "test", time() + 3600, '/');
+		// session_start();
+		// session_get_cookie_params();
+		// session_set_cookie_params();
+		// $this->input->set_cookie($cookie);
+
+		$this->load->view('cookiesButton');
+	}
+	public function cookies(){
+		// $this->load->helper('cookie');
+		$this->load->view('cookies');
 	}
 }
 ?>
